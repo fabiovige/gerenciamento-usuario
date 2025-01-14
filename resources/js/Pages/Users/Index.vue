@@ -5,11 +5,20 @@ import DataTable from '@/Components/DataTable.vue';
 
 const props = defineProps({
     users: Object,
+    filters: Object,
 });
 
 const columns = [
-    { key: 'name', label: 'Name' },
-    { key: 'email', label: 'Email' },
+    {
+        key: 'name',
+        label: 'Name',
+        searchable: true
+    },
+    {
+        key: 'email',
+        label: 'Email',
+        searchable: true
+    },
 ];
 
 const actions = [
@@ -47,22 +56,22 @@ const handleAction = ({ action, item }) => {
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <div class="flex justify-between mb-6">
-                        <h3 class="text-lg font-medium text-gray-900">User List</h3>
-                        <Link
-                            :href="route('users.create')"
-                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700"
-                        >
-                            Add New User
-                        </Link>
-                    </div>
-
                     <DataTable
                         :columns="columns"
                         :data="users"
                         :actions="actions"
+                        :filters="filters"
                         @action-click="handleAction"
-                    />
+                    >
+                        <template #actions>
+                            <Link
+                                :href="route('users.create')"
+                                class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700"
+                            >
+                                Add New User
+                            </Link>
+                        </template>
+                    </DataTable>
                 </div>
             </div>
         </div>

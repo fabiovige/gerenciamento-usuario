@@ -13,6 +13,12 @@ class UserController extends Controller
     public function index()
     {
         $users = User::query()
+            ->when(request('search'), function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                          ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
             ->latest()
             ->paginate(5)
             ->withQueryString()
@@ -23,7 +29,8 @@ class UserController extends Controller
             ]);
 
         return Inertia::render('Users/Index', [
-            'users' => $users
+            'users' => $users,
+            'filters' => request()->only(['search'])
         ]);
     }
 
@@ -46,7 +53,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('users.index')
+        return redirect()->route('users.index', request()->only('search'))
             ->with('flash', [
                 'type' => 'success',
                 'message' => 'User created successfully!'
@@ -67,7 +74,6 @@ class UserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
         ];
 
-        // Adiciona regras de validação de senha apenas se uma nova senha foi fornecida
         if ($request->filled('password')) {
             $rules['password'] = ['required', 'confirmed', Rules\Password::defaults()];
         }
@@ -85,7 +91,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('users.index')
+        return redirect()->route('users.index', request()->only('search'))
             ->with('flash', [
                 'type' => 'success',
                 'message' => 'User updated successfully!'
@@ -94,7 +100,6 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        // Impede que o usuário exclua a si mesmo
         if ($user->id === auth()->id()) {
             return back()->with('flash', [
                 'type' => 'error',
@@ -104,7 +109,7 @@ class UserController extends Controller
 
         $user->delete();
 
-        return redirect()->route('users.index')
+        return redirect()->route('users.index', request()->only('search'))
             ->with('flash', [
                 'type' => 'success',
                 'message' => 'User deleted successfully!'

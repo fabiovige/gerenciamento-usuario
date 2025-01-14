@@ -1,6 +1,8 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import Pagination from '@/Components/Pagination.vue';
+import { ref, watch } from 'vue';
+import { router } from '@inertiajs/vue3';
 
 const props = defineProps({
     columns: {
@@ -14,10 +16,36 @@ const props = defineProps({
     actions: {
         type: Array,
         default: () => []
+    },
+    filters: {
+        type: Object,
+        default: () => ({})
     }
 });
 
 const emit = defineEmits(['actionClick']);
+
+const search = ref(props.filters.search || '');
+let timeout;
+
+watch(() => props.filters, (newFilters) => {
+    search.value = newFilters.search || '';
+}, { deep: true });
+
+const handleSearch = () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+        router.get(
+            route(route().current()),
+            { search: search.value },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true
+            }
+        );
+    }, 300);
+};
 
 const handleActionClick = (action, item) => {
     emit('actionClick', { action, item });
@@ -26,6 +54,28 @@ const handleActionClick = (action, item) => {
 
 <template>
     <div>
+        <!-- Header com busca e botão -->
+        <div class="flex justify-between items-center mb-4">
+            <div class="max-w-md flex-1 mr-4">
+                <div class="relative rounded-md shadow-sm">
+                    <input
+                        id="search"
+                        v-model="search"
+                        type="text"
+                        class="block w-full rounded-md border-gray-300 pr-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        placeholder="Buscar..."
+                        @input="handleSearch"
+                    >
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                        <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <slot name="actions"></slot>
+        </div>
+
         <table class="min-w-full divide-y divide-gray-200">
             <thead>
                 <tr>
