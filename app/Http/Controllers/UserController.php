@@ -38,7 +38,11 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')
+            ->with('flash', [
+                'type' => 'success',
+                'message' => 'User created successfully!'
+            ]);
     }
 
     public function edit(User $user)
@@ -73,18 +77,29 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')
+            ->with('flash', [
+                'type' => 'success',
+                'message' => 'User updated successfully!'
+            ]);
     }
 
     public function destroy(User $user)
     {
         // Impede que o usuário exclua a si mesmo
         if ($user->id === auth()->id()) {
-            return back()->with('error', 'You cannot delete your own account.');
+            return back()->with('flash', [
+                'type' => 'error',
+                'message' => 'You cannot delete your own account.'
+            ]);
         }
 
         $user->delete();
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')
+            ->with('flash', [
+                'type' => 'success',
+                'message' => 'User deleted successfully!'
+            ]);
     }
 }
