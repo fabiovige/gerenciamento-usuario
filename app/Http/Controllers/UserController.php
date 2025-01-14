@@ -12,7 +12,15 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::paginate(10);
+        $users = User::query()
+            ->latest()
+            ->paginate(5)
+            ->withQueryString()
+            ->through(fn ($user) => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ]);
 
         return Inertia::render('Users/Index', [
             'users' => $users

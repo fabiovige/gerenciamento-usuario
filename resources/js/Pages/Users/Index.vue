@@ -59,7 +59,7 @@ const handleAction = ({ action, item }) => {
 
                     <DataTable
                         :columns="columns"
-                        :data="users.data"
+                        :data="users"
                         :actions="actions"
                         @action-click="handleAction"
                     />
