@@ -50,7 +50,30 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        // Implementaremos depois
+        $rules = [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+        ];
+
+        // Adiciona regras de validação de senha apenas se uma nova senha foi fornecida
+        if ($request->filled('password')) {
+            $rules['password'] = ['required', 'confirmed', Rules\Password::defaults()];
+        }
+
+        $request->validate($rules);
+
+        $user->fill([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('users.index');
     }
 
     public function destroy(User $user)
