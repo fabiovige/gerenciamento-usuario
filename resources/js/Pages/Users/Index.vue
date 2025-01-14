@@ -1,10 +1,16 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 
 defineProps({
     users: Object,
 });
+
+const destroyUser = (userId) => {
+    if (confirm('Are you sure you want to delete this user?')) {
+        router.delete(route('users.destroy', userId));
+    }
+};
 </script>
 
 <template>
@@ -40,13 +46,19 @@ defineProps({
                             <tr v-for="user in users.data" :key="user.id">
                                 <td class="px-6 py-4 whitespace-no-wrap">{{ user.name }}</td>
                                 <td class="px-6 py-4 whitespace-no-wrap">{{ user.email }}</td>
-                                <td class="px-6 py-4 whitespace-no-wrap">
+                                <td class="px-6 py-4 whitespace-no-wrap flex">
                                     <Link
                                         :href="route('users.edit', user.id)"
                                         class="text-indigo-600 hover:text-indigo-900 mr-3"
                                     >
                                         Edit
                                     </Link>
+                                    <button
+                                        @click="destroyUser(user.id)"
+                                        class="text-red-600 hover:text-red-900"
+                                    >
+                                        Delete
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
