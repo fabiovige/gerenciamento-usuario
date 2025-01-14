@@ -1,11 +1,12 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, Link } from '@inertiajs/vue3';
 import FormSection from '@/Components/FormSection.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import PasswordInput from '@/Components/PasswordInput.vue';
 
 const props = defineProps({
     user: Object,
@@ -31,9 +32,20 @@ const updateUser = () => {
 <template>
     <AppLayout title="Edit User">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Edit User
-            </h2>
+            <div class="flex justify-between items-center">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    Edit User
+                </h2>
+                <Link
+                    :href="route('users.index')"
+                    class="inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-900 uppercase tracking-widest hover:bg-gray-300 active:bg-gray-300 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition"
+                >
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to List
+                </Link>
+            </div>
         </template>
 
         <div class="py-12">
@@ -75,10 +87,9 @@ const updateUser = () => {
 
                         <div class="col-span-6 sm:col-span-4">
                             <InputLabel for="password" value="Password" />
-                            <TextInput
+                            <PasswordInput
                                 id="password"
                                 v-model="form.password"
-                                type="password"
                                 class="mt-1 block w-full"
                                 autocomplete="new-password"
                             />
@@ -88,10 +99,9 @@ const updateUser = () => {
 
                         <div class="col-span-6 sm:col-span-4">
                             <InputLabel for="password_confirmation" value="Confirm Password" />
-                            <TextInput
+                            <PasswordInput
                                 id="password_confirmation"
                                 v-model="form.password_confirmation"
-                                type="password"
                                 class="mt-1 block w-full"
                                 autocomplete="new-password"
                             />
