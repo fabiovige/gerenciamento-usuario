@@ -2,11 +2,16 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Link, router } from '@inertiajs/vue3';
 import DataTable from '@/Components/DataTable.vue';
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
+import { ref } from 'vue';
 
 const props = defineProps({
     users: Object,
     filters: Object,
 });
+
+const showDeleteModal = ref(false);
+const userToDelete = ref(null);
 
 const columns = [
     {
@@ -38,10 +43,24 @@ const actions = [
 
 const handleAction = ({ action, item }) => {
     if (action.action === 'delete') {
-        if (confirm('Are you sure you want to delete this user?')) {
-            router.delete(route('users.destroy', item.id));
-        }
+        userToDelete.value = item;
+        showDeleteModal.value = true;
     }
+};
+
+const confirmDelete = () => {
+    router.delete(route('users.destroy', userToDelete.value.id), {
+        preserveScroll: true,
+        onSuccess: () => {
+            showDeleteModal.value = false;
+            userToDelete.value = null;
+        },
+    });
+};
+
+const closeModal = () => {
+    showDeleteModal.value = false;
+    userToDelete.value = null;
 };
 </script>
 
@@ -72,6 +91,14 @@ const handleAction = ({ action, item }) => {
                             </Link>
                         </template>
                     </DataTable>
+
+                    <ConfirmationModal
+                        :show="showDeleteModal"
+                        title="Delete User"
+                        :message="`Are you sure you want to delete the user '${userToDelete?.name}'? This action cannot be undone.`"
+                        @close="closeModal"
+                        @confirm="confirmDelete"
+                    />
                 </div>
             </div>
         </div>
