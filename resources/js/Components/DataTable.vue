@@ -50,6 +50,17 @@ const handleSearch = () => {
     }, 300);
 };
 
+const clearSearch = () => {
+    router.get(
+        route(route().current()),
+        { clear_search: true },
+        {
+            preserveState: false,
+            preserveScroll: true
+        }
+    );
+};
+
 const handleActionClick = (action, item) => {
     emit('actionClick', { action, item });
 };
@@ -60,7 +71,7 @@ const handleActionClick = (action, item) => {
         <!-- Header com busca e botão -->
         <div class="flex justify-between items-center mb-4">
             <div class="max-w-md flex-1 mr-4">
-                <div class="relative rounded-md shadow-sm">
+                <div class="relative flex items-center">
                     <input
                         id="search"
                         v-model="search"
@@ -69,8 +80,20 @@ const handleActionClick = (action, item) => {
                         :placeholder="t('common.search')"
                         @input="handleSearch"
                     >
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                        <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                        <!-- Botão Limpar (aparece apenas quando há busca) -->
+                        <button
+                            v-if="search"
+                            @click="clearSearch"
+                            class="text-gray-400 hover:text-gray-500 focus:outline-none"
+                            :title="t('common.clear_search')"
+                        >
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <!-- Ícone de Busca -->
+                        <svg v-else class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                         </svg>
                     </div>

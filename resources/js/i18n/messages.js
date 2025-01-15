@@ -30,7 +30,8 @@ export default {
             actions: 'Ações',
             back: 'Voltar',
             create: 'Criar',
-            update: 'Atualizar'
+            update: 'Atualizar',
+            clear_search: 'Limpar busca'
         },
         auth: {
             profile: 'Perfil',
@@ -85,6 +86,10 @@ export default {
         menu: {
             dashboard: 'Painel',
             users: 'Usuários'
+        },
+        app: {
+            name: 'Sistema de Gestão',
+            rights: 'Todos os direitos reservados'
         }
     },
     en: {

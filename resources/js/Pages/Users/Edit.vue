@@ -7,9 +7,13 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import PasswordInput from '@/Components/PasswordInput.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
     user: Object,
+    filters: Object,
 });
 
 const form = useForm({
@@ -17,6 +21,9 @@ const form = useForm({
     email: props.user.email,
     password: '',
     password_confirmation: '',
+    _query: {
+        search: props.filters?.search
+    }
 });
 
 const updateUser = () => {
@@ -30,33 +37,39 @@ const updateUser = () => {
 </script>
 
 <template>
-    <AppLayout title="Edit User">
+    <AppLayout :title="t('users.edit')">
+        <!-- Header Principal -->
         <template #header>
-            <div class="flex justify-between items-center">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    Edit User
-                </h2>
-                <Link
-                    :href="route('users.index')"
-                    class="inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-900 uppercase tracking-widest hover:bg-gray-300 active:bg-gray-300 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition"
-                >
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    Back to List
-                </Link>
-            </div>
+            {{ t('users.edit') }}
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <!-- Breadcrumb -->
+        <template #breadcrumb>
+            {{ t('menu.dashboard') }} / {{ t('users.title') }} / {{ t('users.edit') }}
+        </template>
+
+        <!-- Botão Voltar -->
+        <template #actions>
+            <Link
+                :href="route('users.index', { search: $page.props.filters?.search })"
+                class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                {{ t('common.back') }}
+            </Link>
+        </template>
+
+        <div class="py-6">
+            <div class="w-full">
                 <FormSection @submitted="updateUser">
                     <template #title>
-                        User Information
+                        {{ t('users.user_information') }}
                     </template>
 
                     <template #description>
-                        Update user account information.
+                        {{ t('users.edit_description') }}
                     </template>
 
                     <template #form>
@@ -110,7 +123,7 @@ const updateUser = () => {
 
                     <template #actions>
                         <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                            Update User
+                            {{ t('common.update') }}
                         </PrimaryButton>
                     </template>
                 </FormSection>

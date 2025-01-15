@@ -10,10 +10,24 @@ use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // Se tiver um novo termo de busca, salva na sessão
+        if ($request->has('search')) {
+            session(['users.search' => $request->search]);
+        }
+
+        // Se a ação for limpar, remove da sessão
+        if ($request->has('clear_search')) {
+            session()->forget('users.search');
+            return redirect()->route('users.index');
+        }
+
+        // Pega o termo de busca da sessão
+        $search = session('users.search');
+
         $users = User::query()
-            ->when(request('search'), function ($query, $search) {
+            ->when($search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%")
                           ->orWhere('email', 'like', "%{$search}%");
@@ -30,13 +44,17 @@ class UserController extends Controller
 
         return Inertia::render('Users/Index', [
             'users' => $users,
-            'filters' => request()->only(['search'])
+            'filters' => [
+                'search' => $search
+            ]
         ]);
     }
 
     public function create()
     {
-        return Inertia::render('Users/Create');
+        return Inertia::render('Users/Create', [
+            'filters' => request()->only(['search'])
+        ]);
     }
 
     public function store(Request $request)
@@ -53,17 +71,19 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('users.index', request()->only('search'))
-            ->with('flash', [
-                'type' => 'success',
-                'message' => 'User created successfully!'
-            ]);
+        return redirect()->route('users.index', [
+            'search' => $request->input('_query.search')
+        ])->with('flash', [
+            'type' => 'success',
+            'message' => 'User created successfully!'
+        ]);
     }
 
     public function edit(User $user)
     {
         return Inertia::render('Users/Edit', [
-            'user' => $user
+            'user' => $user,
+            'filters' => request()->only(['search'])
         ]);
     }
 
@@ -91,11 +111,12 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('users.index', request()->only('search'))
-            ->with('flash', [
-                'type' => 'success',
-                'message' => 'User updated successfully!'
-            ]);
+        return redirect()->route('users.index', [
+            'search' => $request->input('_query.search')
+        ])->with('flash', [
+            'type' => 'success',
+            'message' => 'User updated successfully!'
+        ]);
     }
 
     public function destroy(User $user)
@@ -109,10 +130,11 @@ class UserController extends Controller
 
         $user->delete();
 
-        return redirect()->route('users.index', request()->only('search'))
-            ->with('flash', [
-                'type' => 'success',
-                'message' => 'User deleted successfully!'
-            ]);
+        return redirect()->route('users.index', [
+            'search' => request()->query('search')
+        ])->with('flash', [
+            'type' => 'success',
+            'message' => 'User deleted successfully!'
+        ]);
     }
 }
