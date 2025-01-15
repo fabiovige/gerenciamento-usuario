@@ -43,7 +43,44 @@ export default {
                 create: 'Criar Nova Equipe',
                 switch: 'Trocar de Equipe'
             },
-            name: 'Bem-vindo, {name}'
+            name: 'Bem-vindo, {name}',
+            login: {
+                title: 'Login',
+                email: 'E-mail',
+                password: 'Senha',
+                remember_me: 'Lembrar-me',
+                forgot_password: 'Esqueceu sua senha?',
+                login_button: 'Entrar',
+                register: 'Registrar'
+            },
+            register: {
+                title: 'Registro',
+                name: 'Nome',
+                email: 'E-mail',
+                password: 'Senha',
+                confirm_password: 'Confirmar Senha',
+                already_registered: 'Já possui registro?',
+                register_button: 'Registrar',
+                terms: {
+                    agree: 'Eu concordo com os',
+                    terms_of_service: 'Termos de Serviço',
+                    and: 'e',
+                    privacy_policy: 'Política de Privacidade'
+                }
+            },
+            forgot_password: {
+                title: 'Esqueceu a Senha',
+                email: 'E-mail',
+                description: 'Esqueceu sua senha? Sem problemas. Basta nos informar seu endereço de e-mail e enviaremos um link de redefinição de senha que permitirá escolher uma nova.',
+                send_link: 'Enviar Link de Redefinição de Senha'
+            },
+            reset_password: {
+                title: 'Redefinir Senha',
+                email: 'E-mail',
+                password: 'Senha',
+                confirm_password: 'Confirmar Senha',
+                reset_button: 'Redefinir Senha'
+            }
         },
         menu: {
             dashboard: 'Painel',
@@ -56,7 +93,16 @@ export default {
             delete: 'Delete User',
         },
         auth: {
-            name: '{name}'
+            name: '{name}',
+            login: {
+                title: 'Login',
+                email: 'Email',
+                password: 'Password',
+                remember_me: 'Remember me',
+                forgot_password: 'Forgot your password?',
+                login_button: 'Log in',
+                register: 'Register'
+            }
         }
     }
 };
