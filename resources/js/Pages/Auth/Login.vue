@@ -11,6 +11,14 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 
+defineProps({
+    canResetPassword: {
+        type: Boolean,
+        default: false
+    },
+    status: String,
+});
+
 const form = useForm({
     email: '',
     password: '',

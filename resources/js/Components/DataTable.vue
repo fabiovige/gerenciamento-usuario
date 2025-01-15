@@ -3,6 +3,9 @@ import { Link } from '@inertiajs/vue3';
 import Pagination from '@/Components/Pagination.vue';
 import { ref, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
     columns: {
@@ -63,7 +66,7 @@ const handleActionClick = (action, item) => {
                         v-model="search"
                         type="text"
                         class="block w-full rounded-md border-gray-300 pr-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                        placeholder="Buscar..."
+                        :placeholder="t('common.search')"
                         @input="handleSearch"
                     >
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -84,10 +87,10 @@ const handleActionClick = (action, item) => {
                         :key="column.key"
                         class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
                     >
-                        {{ column.label }}
+                        {{ t(`users.${column.key}`) }}
                     </th>
                     <th v-if="actions.length" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {{ t('common.actions') }}
                     </th>
                 </tr>
             </thead>
