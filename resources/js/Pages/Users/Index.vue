@@ -4,6 +4,9 @@ import { Link, router } from '@inertiajs/vue3';
 import DataTable from '@/Components/DataTable.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
     users: Object,
@@ -16,12 +19,12 @@ const userToDelete = ref(null);
 const columns = [
     {
         key: 'name',
-        label: 'Name',
+        label: t('users.name'),
         searchable: true
     },
     {
         key: 'email',
-        label: 'Email',
+        label: t('users.email'),
         searchable: true
     },
 ];
@@ -29,13 +32,13 @@ const columns = [
 const actions = [
     {
         type: 'link',
-        label: 'Edit',
+        label: t('users.edit_action'),
         href: (user) => route('users.edit', user.id),
         class: 'text-indigo-600 hover:text-indigo-900'
     },
     {
         type: 'button',
-        label: 'Delete',
+        label: t('users.delete_action'),
         action: 'delete',
         class: 'text-red-600 hover:text-red-900'
     }
@@ -65,10 +68,10 @@ const closeModal = () => {
 </script>
 
 <template>
-    <AppLayout title="Users">
+    <AppLayout :title="t('users.title')">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Users
+                {{ t('users.title') }}
             </h2>
         </template>
 
@@ -87,15 +90,15 @@ const closeModal = () => {
                                 :href="route('users.create')"
                                 class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700"
                             >
-                                Add New User
+                                {{ t('users.add_new') }}
                             </Link>
                         </template>
                     </DataTable>
 
                     <ConfirmationModal
                         :show="showDeleteModal"
-                        title="Delete User"
-                        :message="`Are you sure you want to delete the user '${userToDelete?.name}'? This action cannot be undone.`"
+                        :title="t('users.delete')"
+                        :message="t('users.confirm_delete', { name: userToDelete?.name })"
                         @close="closeModal"
                         @confirm="confirmDelete"
                     />
