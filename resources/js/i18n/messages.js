@@ -13,6 +13,7 @@ export default {
             actions: 'Ações',
             edit_action: 'Editar',
             delete_action: 'Excluir',
+            delete: 'Excluir Usuário',
             search: 'Buscar...',
             user_information: 'Informações do Usuário',
             create_description: 'Criar uma nova conta de usuário.',
@@ -34,11 +35,28 @@ export default {
         auth: {
             profile: 'Perfil',
             logout: 'Sair',
-            manage_account: 'Gerenciar Conta'
+            manage_account: 'Gerenciar Conta',
+            api_tokens: 'Tokens API',
+            team: {
+                manage: 'Gerenciar Equipe',
+                settings: 'Configurações da Equipe',
+                create: 'Criar Nova Equipe',
+                switch: 'Trocar de Equipe'
+            },
+            name: 'Bem-vindo, {name}'
         },
         menu: {
             dashboard: 'Painel',
             users: 'Usuários'
+        }
+    },
+    en: {
+        users: {
+            title: 'Users',
+            delete: 'Delete User',
+        },
+        auth: {
+            name: '{name}'
         }
     }
 };

@@ -8,6 +8,9 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import FlashMessage from '@/Components/FlashMessage.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 defineProps({
     title: String,
@@ -51,10 +54,10 @@ const logout = () => {
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                                    {{ t('menu.dashboard') }}
                                 </NavLink>
                                 <NavLink :href="route('users.index')" :active="route().current('users.index')">
-                                    Users
+                                    {{ t('users.title') }}
                                 </NavLink>
                             </div>
                         </div>
@@ -79,19 +82,23 @@ const logout = () => {
                                         <div class="w-60">
                                             <!-- Team Management -->
                                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                                Manage Team
+                                                {{ t('auth.team.manage') }}
                                             </div>
 
                                             <!-- Team Settings -->
                                             <DropdownLink :href="route('teams.show', $page.props.auth.user.current_team)">
-                                                Team Settings
+                                                {{ t('auth.team.settings') }}
                                             </DropdownLink>
 
                                             <DropdownLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')">
-                                                Create New Team
+                                                {{ t('auth.team.create') }}
                                             </DropdownLink>
 
                                             <!-- Team Switcher -->
+                                            <div class="block px-4 py-2 text-xs text-gray-400">
+                                                {{ t('auth.team.switch') }}
+                                            </div>
+
                                             <template v-if="$page.props.auth.user.all_teams.length > 1">
                                                 <div class="border-t border-gray-200" />
 
@@ -128,7 +135,7 @@ const logout = () => {
 
                                         <span v-else class="inline-flex rounded-md">
                                             <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
-                                                {{ $page.props.auth.user.name }}
+                                                {{ t('auth.name', { name: $page.props.auth.user.name }) }}
 
                                                 <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -140,15 +147,15 @@ const logout = () => {
                                     <template #content>
                                         <!-- Account Management -->
                                         <div class="block px-4 py-2 text-xs text-gray-400">
-                                            Manage Account
+                                            {{ t('auth.manage_account') }}
                                         </div>
 
                                         <DropdownLink :href="route('profile.show')">
-                                            Profile
+                                            {{ t('auth.profile') }}
                                         </DropdownLink>
 
                                         <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
-                                            API Tokens
+                                            {{ t('auth.api_tokens') }}
                                         </DropdownLink>
 
                                         <div class="border-t border-gray-200" />
@@ -156,7 +163,7 @@ const logout = () => {
                                         <!-- Authentication -->
                                         <form @submit.prevent="logout">
                                             <DropdownLink as="button">
-                                                Log Out
+                                                {{ t('auth.logout') }}
                                             </DropdownLink>
                                         </form>
                                     </template>
